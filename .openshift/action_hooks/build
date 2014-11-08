@@ -35,7 +35,7 @@ if [ -d "banking" ]; then
         cd banking 
         git pull
 else
-	git -b 7.0 clone https://github.com/OCA/banking.git
+	git clone -b 7.0 https://github.com/OCA/banking.git
 fi
 
 ln -s -f $OPENSHIFT_DATA_DIR/banking/* $OPENSHIFT_DATA_DIR/openerp-${OPENERP_VERSION}-${OPENERP_TIMESTAMP}/openerp/addons/
