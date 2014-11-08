@@ -1,0 +1,55 @@
+#!/bin/bash
+
+OPENERP_VERSION=7.0
+OPENERP_TIMESTAMP=20140804-231303
+OPENERP_URL=http://nightly.openerp.com/$OPENERP_VERSION/nightly/src/openerp-${OPENERP_VERSION}-${OPENERP_TIMESTAMP}.tar.gz
+
+cd $OPENSHIFT_DATA_DIR/
+
+if [ -d "openerp-${OPENERP_VERSION}-${OPENERP_TIMESTAMP}" ]; then
+	echo "OpenERP already downloaded."
+else
+	echo "Odoo will be downloaded now."
+	wget $OPENERP_URL
+	tar xzf openerp-${OPENERP_VERSION}-${OPENERP_TIMESTAMP}.tar.gz
+fi
+cd $OPENSHIFT_REPO_DIR/wsgi/
+ln -s -f $OPENSHIFT_DATA_DIR/openerp-${OPENERP_VERSION}-${OPENERP_TIMESTAMP} openerp
+
+cd $OPENSHIFT_DATA_DIR/
+
+if [ -d "be-cloud-openerp-modules" ]; then
+        echo "be-cloud-openerp-modules already cloned."
+	cd be-cloud-openerp-modules
+	git pull
+else
+	git clone https://github.com/JeromeSonnet/be-cloud-openerp-modules.git
+fi
+
+ln -s -f $OPENSHIFT_DATA_DIR/be-cloud-openerp-modules/* $OPENSHIFT_DATA_DIR/openerp-${OPENERP_VERSION}-${OPENERP_TIMESTAMP}/openerp/addons/
+
+cd $OPENSHIFT_DATA_DIR/
+
+if [ -d "banking" ]; then
+        echo "banking already cloned."
+        cd banking 
+        git pull
+else
+	git clone https://github.com/OCA/banking.git
+fi
+
+ln -s -f $OPENSHIFT_DATA_DIR/banking/* $OPENSHIFT_DATA_DIR/openerp-${OPENERP_VERSION}-${OPENERP_TIMESTAMP}/openerp/addons/
+
+cd $OPENSHIFT_DATA_DIR/
+
+if [ -d "web" ]; then
+        echo "web already cloned."
+        cd web 
+        git pull 
+else
+        git clone -b 7.0 https://github.com/OCA/web.git 
+fi
+
+ln -s -f $OPENSHIFT_DATA_DIR/web/* $OPENSHIFT_DATA_DIR/openerp-${OPENERP_VERSION}-${OPENERP_TIMESTAMP}/openerp/addons/
+
+exit 0
