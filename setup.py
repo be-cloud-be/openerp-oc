@@ -6,4 +6,5 @@ setup(name='OpenERP',
       author='Mateus Caruccio',
       author_email='mateus.caruccio@getupcloud.com',
       url='https://github.com/caruccio/openshift-openerp-quickstart',
+      install_requires=['pip>=9.0'],
 )
